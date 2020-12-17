@@ -33,6 +33,8 @@ namespace API_Project.Models
         public virtual DbSet<DBUser> DBUser { get; set; }
         public virtual DbSet<DBAccount> DBAccount { get; set; }
         public virtual DbSet<DBMainMenuModel> DBMainMenu { get; set; }
+        public virtual DbSet<DBItems> DBItems { get; set; }
+        public virtual DbSet<DBTypeItems> DBTypeItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -99,6 +101,40 @@ namespace API_Project.Models
                 entity.Property(e => e.AllowCode).HasColumnName("AllowCode")
                     .HasMaxLength(50);
 
+            });
+
+            modelBuilder.Entity<DBItems>(entity =>
+            {
+                entity.HasKey(e => e.IdItem)
+                    .HasName("DB_Items_pkey");
+
+                entity.ToTable("Items");
+
+                entity.Property(e => e.IdItem)
+                    .HasColumnName("IdItem")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.IdType).HasColumnName("IdType");
+                entity.Property(e => e.Name).HasColumnName("Name");
+                entity.Property(e => e.Money).HasColumnName("Money");
+                entity.Property(e => e.Sales).HasColumnName("Sales");
+                entity.Property(e => e.RateAvg).HasColumnName("RateAvg");
+                entity.Property(e => e.LinkImage).HasColumnName("LinkImage");
+            });
+
+            modelBuilder.Entity<DBTypeItems>(entity =>
+            {
+                entity.HasKey(e => e.IdType)
+                    .HasName("DB_Type_pkey");
+
+                entity.ToTable("Type_Items");
+
+                entity.Property(e => e.IdType)
+                    .HasColumnName("IdType")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Name).HasColumnName("Name");
+                entity.Property(e => e.IdMainMenu).HasColumnName("IdMainMenu");
             });
         }
     }
