@@ -35,6 +35,11 @@ namespace API_Project.Models
         public virtual DbSet<DBMainMenuModel> DBMainMenu { get; set; }
         public virtual DbSet<DBItems> DBItems { get; set; }
         public virtual DbSet<DBTypeItems> DBTypeItems { get; set; }
+        public virtual DbSet<DBReview> DBReview { get; set; }
+        public virtual DbSet<DBClicker> DBClicker { get; set; }
+        public virtual DbSet<DBRating> DBRating { get; set; }
+        public virtual DbSet<DBTransaction> DBTransaction { get; set; }
+        public virtual DbSet<DBTransactionDetail> DBTransactionDetail { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -136,6 +141,92 @@ namespace API_Project.Models
                 entity.Property(e => e.Name).HasColumnName("Name");
                 entity.Property(e => e.IdMainMenu).HasColumnName("IdMainMenu");
             });
+
+            modelBuilder.Entity<DBReview>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .HasName("DB_Review_pkey");
+
+                entity.ToTable("Review");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.IdAccount).HasColumnName("IdAccount");
+                entity.Property(e => e.IdTransactionDetail).HasColumnName("IdTransactionDetail");
+                entity.Property(e => e.IdItem).HasColumnName("IdItem");
+                entity.Property(e => e.Text).HasColumnName("Text");
+                entity.Property(e => e.Time).HasColumnName("Time");
+            });
+
+            modelBuilder.Entity<DBRating>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .HasName("DB_Rating_pkey");
+
+                entity.ToTable("Rating");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.IdAccount).HasColumnName("IdAccount");
+                entity.Property(e => e.IdTransactionDetail).HasColumnName("IdTransactionDetail");
+                entity.Property(e => e.IdItem).HasColumnName("IdItem");
+                entity.Property(e => e.Rate).HasColumnName("Rate");
+                entity.Property(e => e.Time).HasColumnName("Time");
+            });
+
+            modelBuilder.Entity<DBClicker>(entity =>
+            {
+                entity.HasKey(e => e.Id)
+                    .HasName("DB_Clicker_pkey");
+
+                entity.ToTable("Clicker");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("Id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.IdAccount).HasColumnName("IdAccount");
+                entity.Property(e => e.IdTransactionDetail).HasColumnName("IdTransactionDetail");
+                entity.Property(e => e.IdItem).HasColumnName("IdItem");
+                entity.Property(e => e.Click).HasColumnName("Click");
+                entity.Property(e => e.Time).HasColumnName("Time");
+            });
+
+            modelBuilder.Entity<DBTransaction>(entity =>
+            {
+                entity.HasKey(e => e.IdTransaction)
+                    .HasName("DB_Transaction_pkey");
+
+                entity.ToTable("Transaction");
+
+                entity.Property(e => e.IdTransaction)
+                    .HasColumnName("IdTransaction")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.IdAccount).HasColumnName("IdAccount");
+            });
+
+            modelBuilder.Entity<DBTransactionDetail>(entity =>
+            {
+                entity.HasKey(e => e.IdTransactionDetail)
+                    .HasName("DB_TransactionDetail_pkey");
+
+                entity.ToTable("TransactionDetail");
+
+                entity.Property(e => e.IdTransactionDetail)
+                    .HasColumnName("IdTransactionDetail")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.IdTransaction).HasColumnName("IdTransaction");
+                entity.Property(e => e.IdItem).HasColumnName("IdItem");
+                entity.Property(e => e.Money).HasColumnName("Money");
+                entity.Property(e => e.Quantity).HasColumnName("Quantity");
+            });
+
         }
     }
 }
