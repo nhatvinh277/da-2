@@ -13,6 +13,7 @@ namespace API_Project.Models
     public class LoginData
     {
         public long Id { get; set; }
+        public long IdAccount { get; set; }
         public string UserName { get; set; }
         public int Status { get; set; } = 0;
         public List<string> Rules { get; set; }

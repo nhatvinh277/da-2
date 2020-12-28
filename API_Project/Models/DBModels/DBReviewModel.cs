@@ -11,6 +11,7 @@ namespace API_Project.Models
         public long IdAccount { get; set; }
         public long IdTransactionDetail { get; set; }
         public long IdItem { get; set; }
+        public int Rate { get; set; }
         public string Text { get; set; }
         public DateTime Time { get; set; }
     }

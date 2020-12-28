@@ -51,7 +51,9 @@ namespace API_Project.Models
             {
                 entity.HasKey(e => e.IdUser).HasName("DB_User_pkey");
                 entity.ToTable("User");
-                entity.Property(e => e.IdUser).HasColumnName("IdUser").ValueGeneratedNever();
+                entity.Property(e => e.IdUser).HasColumnName("IdUser")
+                    .ForNpgsqlHasComment("Khóa chính tự tăng")
+                    .UseNpgsqlIdentityAlwaysColumn();
 
                 entity.Property(e => e.Fullname).HasColumnName("Fullname");
                 entity.Property(e => e.Gender).HasColumnName("Gender")
@@ -68,11 +70,14 @@ namespace API_Project.Models
             {
                 entity.HasKey(e => e.IdAccount).HasName("DB_Account_pkey");
                 entity.ToTable("Account");
-                entity.Property(e => e.IdAccount).HasColumnName("IdAccount").ValueGeneratedNever();
+                entity.Property(e => e.IdAccount).HasColumnName("IdAccount")
+                    .ForNpgsqlHasComment("Khóa chính tự tăng")
+                    .UseNpgsqlIdentityAlwaysColumn();
 
                 entity.Property(e => e.IdUser).HasColumnName("IdUser");
                 entity.Property(e => e.Username).HasColumnName("Username");
                 entity.Property(e => e.Password).HasColumnName("Password");
+                entity.Property(e => e.Salt).HasColumnName("Salt");
 
             });
 
@@ -85,7 +90,8 @@ namespace API_Project.Models
 
                 entity.Property(e => e.Id_Main)
                     .HasColumnName("Id_Main")
-                    .ValueGeneratedNever();
+                    .ForNpgsqlHasComment("Khóa chính tự tăng")
+                    .UseNpgsqlIdentityAlwaysColumn();
 
                 entity.Property(e => e.Title).HasColumnName("Title")
                     .HasMaxLength(100);
@@ -117,7 +123,8 @@ namespace API_Project.Models
 
                 entity.Property(e => e.IdItem)
                     .HasColumnName("IdItem")
-                    .ValueGeneratedNever();
+                    .ForNpgsqlHasComment("Khóa chính tự tăng")
+                    .UseNpgsqlIdentityAlwaysColumn();
 
                 entity.Property(e => e.IdType).HasColumnName("IdType");
                 entity.Property(e => e.Name).HasColumnName("Name");
@@ -136,7 +143,8 @@ namespace API_Project.Models
 
                 entity.Property(e => e.IdType)
                     .HasColumnName("IdType")
-                    .ValueGeneratedNever();
+                    .ForNpgsqlHasComment("Khóa chính tự tăng")
+                    .UseNpgsqlIdentityAlwaysColumn();
 
                 entity.Property(e => e.Name).HasColumnName("Name");
                 entity.Property(e => e.IdMainMenu).HasColumnName("IdMainMenu");
@@ -150,12 +158,14 @@ namespace API_Project.Models
                 entity.ToTable("Review");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("IdReview")
+                    .ForNpgsqlHasComment("Khóa chính tự tăng")
+                    .UseNpgsqlIdentityAlwaysColumn();
 
                 entity.Property(e => e.IdAccount).HasColumnName("IdAccount");
-                entity.Property(e => e.IdTransactionDetail).HasColumnName("IdTransactionDetail");
+                entity.Property(e => e.IdTransactionDetail).HasColumnName("IdTransaction_Detail");
                 entity.Property(e => e.IdItem).HasColumnName("IdItem");
+                entity.Property(e => e.Rate).HasColumnName("Rate");
                 entity.Property(e => e.Text).HasColumnName("Text");
                 entity.Property(e => e.Time).HasColumnName("Time");
             });
@@ -168,11 +178,12 @@ namespace API_Project.Models
                 entity.ToTable("Rating");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("IdRating")
+                    .ForNpgsqlHasComment("Khóa chính tự tăng")
+                    .UseNpgsqlIdentityAlwaysColumn();
 
                 entity.Property(e => e.IdAccount).HasColumnName("IdAccount");
-                entity.Property(e => e.IdTransactionDetail).HasColumnName("IdTransactionDetail");
+                entity.Property(e => e.IdTransactionDetail).HasColumnName("IdTransaction_Detail");
                 entity.Property(e => e.IdItem).HasColumnName("IdItem");
                 entity.Property(e => e.Rate).HasColumnName("Rate");
                 entity.Property(e => e.Time).HasColumnName("Time");
@@ -186,11 +197,12 @@ namespace API_Project.Models
                 entity.ToTable("Clicker");
 
                 entity.Property(e => e.Id)
-                    .HasColumnName("Id")
-                    .ValueGeneratedNever();
+                    .HasColumnName("IdClick")
+                    .ForNpgsqlHasComment("Khóa chính tự tăng")
+                    .UseNpgsqlIdentityAlwaysColumn();
 
                 entity.Property(e => e.IdAccount).HasColumnName("IdAccount");
-                entity.Property(e => e.IdTransactionDetail).HasColumnName("IdTransactionDetail");
+                //entity.Property(e => e.IdTransactionDetail).HasColumnName("IdTransactionDetail");
                 entity.Property(e => e.IdItem).HasColumnName("IdItem");
                 entity.Property(e => e.Click).HasColumnName("Click");
                 entity.Property(e => e.Time).HasColumnName("Time");
@@ -205,24 +217,28 @@ namespace API_Project.Models
 
                 entity.Property(e => e.IdTransaction)
                     .HasColumnName("IdTransaction")
-                    .ValueGeneratedNever();
+                    .ForNpgsqlHasComment("Khóa chính tự tăng")
+                    .UseNpgsqlIdentityAlwaysColumn();
 
                 entity.Property(e => e.IdAccount).HasColumnName("IdAccount");
+                entity.Property(e => e.TransactionCode).HasColumnName("TransactionCode");
             });
 
             modelBuilder.Entity<DBTransactionDetail>(entity =>
             {
                 entity.HasKey(e => e.IdTransactionDetail)
-                    .HasName("DB_TransactionDetail_pkey");
+                    .HasName("DB_Transaction_Detail_pkey");
 
-                entity.ToTable("TransactionDetail");
+                entity.ToTable("Transaction_Detail");
 
                 entity.Property(e => e.IdTransactionDetail)
-                    .HasColumnName("IdTransactionDetail")
-                    .ValueGeneratedNever();
+                    .HasColumnName("IdTransaction_Detail")
+                    .ForNpgsqlHasComment("Khóa chính tự tăng")
+                    .UseNpgsqlIdentityAlwaysColumn();
 
                 entity.Property(e => e.IdTransaction).HasColumnName("IdTransaction");
                 entity.Property(e => e.IdItem).HasColumnName("IdItem");
+                entity.Property(e => e.Created).HasColumnName("Created");
                 entity.Property(e => e.Money).HasColumnName("Money");
                 entity.Property(e => e.Quantity).HasColumnName("Quantity");
             });

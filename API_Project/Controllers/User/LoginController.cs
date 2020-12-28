@@ -1,4 +1,5 @@
-﻿using API_Project.Models;
+﻿using API_Project.Assets;
+using API_Project.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -51,13 +52,12 @@ namespace API_Project.Controllers
                     };
                 };
 
-                user = _context.DBUser.Where(x => (x.IdUser == user.IdUser && !x.IsDelete)).FirstOrDefault();
+                user = _context.DBUser.Where(x => (x.IdUser == account.IdUser && !x.IsDelete)).FirstOrDefault();
 
                 bool pwh = false;
 
-                var pw_default = _config["Password:Default"];
 
-                //pwh = EncryptPassword(password.ToString()).Equals(account.Password.ToString()) || (pw_default.Length > 0 && password.ToString().Equals(pw_default));
+                pwh = (password + account.Salt).ToMD5().Equals(account.Password) ? true : false;
 
                 if (pwh)
                 {
@@ -65,6 +65,7 @@ namespace API_Project.Controllers
                     LoginData result = new LoginData
                     {
                         Id = user.IdUser.Value,
+                        IdAccount = account.IdAccount.Value,
                         UserName = account.Username,
                         Fullname = user.Fullname,
                         isEnableError = false,
@@ -91,29 +92,29 @@ namespace API_Project.Controllers
 
         }
 
-        //public string RefreshJSONWebToken(LoginData account)
-        //{
-        //    var permissions = (from per in _context.PqPermission
-        //                       join ap in _context.PqAccountPermit on per.Code equals ap.Code into AccountPermission
-        //                       from accPer in AccountPermission.DefaultIfEmpty()
-        //                       where accPer.UserName.ToString().Equals(account.UserName.ToString()) && per != null
-        //                       select per.Code
-        //                                                      ).Union(
-        //                                                          from per in _context.PqPermission
-        //                                                          join gp in _context.PqGroupPermit on per.Code equals gp.Code into GroupPermission
-        //                                                          from grPer in GroupPermission.DefaultIfEmpty()
-        //                                                          join g in _context.PqGroupAccount on grPer.IdGroup equals g.IdGroup into Group
-        //                                                          from grp in Group.DefaultIfEmpty()
-        //                                                          join ga in _context.PqGroupAccount on grp.UserName equals ga.UserName into GroupAccount
-        //                                                          from groupaccount in GroupAccount.DefaultIfEmpty()
-        //                                                          where groupaccount.UserName.ToString().Equals(account.UserName.ToString()) && per != null
-        //                                                          select per.Code
-        //                                                      )
-        //                                                      .Distinct().ToList();
-        //    account.Rules = permissions;
-        //    account.Token = GenerateJSONWebToken(account);
-        //    return account.Token;
-        //}
+        public string RefreshJSONWebToken(LoginData account)
+        {
+            //var permissions = (from per in _context.PqPermission
+            //                   join ap in _context.PqAccountPermit on per.Code equals ap.Code into AccountPermission
+            //                   from accPer in AccountPermission.DefaultIfEmpty()
+            //                   where accPer.UserName.ToString().Equals(account.UserName.ToString()) && per != null
+            //                   select per.Code
+            //                                                  ).Union(
+            //                                                      from per in _context.PqPermission
+            //                                                      join gp in _context.PqGroupPermit on per.Code equals gp.Code into GroupPermission
+            //                                                      from grPer in GroupPermission.DefaultIfEmpty()
+            //                                                      join g in _context.PqGroupAccount on grPer.IdGroup equals g.IdGroup into Group
+            //                                                      from grp in Group.DefaultIfEmpty()
+            //                                                      join ga in _context.PqGroupAccount on grp.UserName equals ga.UserName into GroupAccount
+            //                                                      from groupaccount in GroupAccount.DefaultIfEmpty()
+            //                                                      where groupaccount.UserName.ToString().Equals(account.UserName.ToString()) && per != null
+            //                                                      select per.Code
+            //                                                  )
+            //                                                  .Distinct().ToList();
+            //account.Rules = permissions;
+            account.Token = GenerateJSONWebToken(account);
+            return account.Token;
+        }
 
         private string GenerateJSONWebToken(LoginData userInfo)
         {
@@ -121,17 +122,11 @@ namespace API_Project.Controllers
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>();
-            if (userInfo.Rules != null)
-            {
-                foreach (var role in userInfo.Rules)
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
-                }
-            }
 
             LoginData account = new LoginData
             {
                 Id = userInfo.Id,
+                IdAccount = userInfo.IdAccount,
                 UserName = userInfo.UserName,
                 //Rules = userInfo.Rules,
                 Fullname = userInfo.Fullname,

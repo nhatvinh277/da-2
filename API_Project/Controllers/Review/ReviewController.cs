@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API_Project.Assets;
 using API_Project.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -29,21 +30,39 @@ namespace API_Project.Controllers
 
         #region
         [Route("add")]
-        [HttpGet]
-        public BaseModel<object> Add(Review data)
+        [HttpPost]
+        [Authorize]
+        public BaseModel<object> Add([FromBody] Review data)
         {
             BaseModel<object> _baseModel = new BaseModel<object>();
-            PageModel _pageModel = new PageModel();
             ErrorModel _error = new ErrorModel();
 
             string Token = _account.GetHeader(Request);
+
+            LoginData loginData = _account._GetInfoUser(Token);
+            if (loginData == null)
+            {
+                return _baseModel = new BaseModel<object>
+                {
+                    data = null,
+                    status = 0,
+                    error = new ErrorModel
+                    {
+                        code = Constant.ERRORDATA,
+                        message = "Phiên đăng nhập hết hạn hoặc bạn chưa truyền Token"
+                    }
+                };
+            }
+
             try
             {
+                _context.Database.BeginTransaction();
                 DBReview item = new DBReview();
-                item.IdAccount = data.IdAccount;
+                item.IdAccount = loginData.IdAccount;
                 item.IdTransactionDetail = data.IdTransactionDetail;
                 item.IdItem = data.IdItem;
                 item.Text = data.Text;
+                item.Rate = data.Rate;
                 item.Time = DateTime.Now;
 
                 _context.DBReview.Add(item);

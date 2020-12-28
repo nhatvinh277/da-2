@@ -8,8 +8,9 @@ namespace API_Project.Models
     public partial class DBAccount
     {
         public long? IdAccount { get; set; }
-        public long IdUser { get; set; }
+        public long? IdUser { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
+        public string Salt { get; set; }
     }
 }

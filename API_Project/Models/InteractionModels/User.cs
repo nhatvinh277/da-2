@@ -15,4 +15,23 @@ namespace API_Project.Models
         public string Nationality { get; set; }
         public bool IsDelete { get; set; }
     }
+
+    public class UserModelLogin
+    {
+        public string username { get; set; }
+        public string password { get; set; }
+    }
+    public class UserModelCreate
+    {
+        public long? IdAccount { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
+        public string repassword { get; set; }
+
+        public string fullname { get; set; }
+        public int gender { get; set; }
+        public DateTime birthdate { get; set; }
+        public string address { get; set; }
+        public string nationality { get; set; }
+    }
 }
