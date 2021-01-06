@@ -40,6 +40,8 @@ namespace API_Project.Models
         public virtual DbSet<DBRating> DBRating { get; set; }
         public virtual DbSet<DBTransaction> DBTransaction { get; set; }
         public virtual DbSet<DBTransactionDetail> DBTransactionDetail { get; set; }
+        public virtual DbSet<DBRules> DBRules { get; set; }
+        public virtual DbSet<DBRulesGroup> DBRulesGroup { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -76,6 +78,7 @@ namespace API_Project.Models
 
                 entity.Property(e => e.IdUser).HasColumnName("IdUser");
                 entity.Property(e => e.Username).HasColumnName("Username");
+                entity.Property(e => e.CodeGroup).HasColumnName("CodeGroup");
                 entity.Property(e => e.Password).HasColumnName("Password");
                 entity.Property(e => e.Salt).HasColumnName("Salt");
 
@@ -243,6 +246,40 @@ namespace API_Project.Models
                 entity.Property(e => e.Quantity).HasColumnName("Quantity");
             });
 
+            modelBuilder.Entity<DBRules>(entity =>
+            {
+                entity.HasKey(e => e.Code)
+                    .HasName("Rules_pkey");
+
+                entity.ToTable("Rules");
+
+                entity.Property(e => e.Code)
+                    .HasColumnName("Code")
+                    .ForNpgsqlHasComment("Khóa chính");
+
+                entity.Property(e => e.Name).HasColumnName("Name");
+                entity.Property(e => e.Description).HasColumnName("Description");
+                entity.Property(e => e.Position).HasColumnName("Position");
+                entity.Property(e => e.CodeGroup).HasColumnName("CodeGroup");
+                entity.Property(e => e.IsDisable).HasColumnName("IsDisable");
+            });
+
+            modelBuilder.Entity<DBRulesGroup>(entity =>
+            {
+                entity.HasKey(e => e.CodeGroup)
+                    .HasName("Rules_Group_pkey");
+
+                entity.ToTable("Rules_Group");
+
+                entity.Property(e => e.CodeGroup)
+                    .HasColumnName("CodeGroup")
+                    .ForNpgsqlHasComment("Khóa chính");
+
+                entity.Property(e => e.Name).HasColumnName("Name");
+                entity.Property(e => e.Description).HasColumnName("Description");
+                entity.Property(e => e.Position).HasColumnName("Position");
+                entity.Property(e => e.Id_Parent).HasColumnName("Id_Parent");
+            });
         }
     }
 }

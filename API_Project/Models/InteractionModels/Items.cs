@@ -9,6 +9,7 @@ namespace API_Project.Models
     {
         public long? IdItem { get; set; }
         public long IdType { get; set; }
+        public string Type { get; set; }
         public string Name { get; set; }
         public decimal Money { get; set; }
         public decimal Sales { get; set; }
@@ -34,5 +35,42 @@ namespace API_Project.Models
         public string Name { get; set; }
         public decimal Money { get; set; }
         public int Quantity { get; set; }
+    }
+
+    public class FileImport
+    {
+        public long? idLoai { get; set; }
+        public string base64 { get; set; }
+        public byte[] fileByte { get; set; } = null;
+        public string filename { get; set; }
+        public string dienGiai { get; set; } = "";
+        public string extension { get; set; }
+    }
+    public class ItemsImportModel
+    {
+        public long? IdItem { get; set; }
+        public long? IdType { get; set; }
+        public string Type { get; set; }
+        public string Name { get; set; }
+        public decimal Money { get; set; }
+        public decimal Sales { get; set; }
+        public decimal RateAvg { get; set; }
+        public string LinkImage { get; set; }
+    }
+
+    public class ItemsSavedImportModel
+    {
+        public long IdType { get; set; }
+        public string Type { get; set; }
+        public string Name { get; set; }
+        public decimal Money { get; set; }
+        public decimal Sales { get; set; }
+        public string LinkImage { get; set; }
+    }
+    public class TypeItemsModel
+    {
+        public long? IdType { get; set; }
+        public string Name { get; set; }
+        public long IdMainMenu { get; set; }
     }
 }

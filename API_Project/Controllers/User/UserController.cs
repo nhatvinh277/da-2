@@ -145,26 +145,57 @@ namespace API_Project.Controllers
         {
             BaseModel<object> _baseModel = new BaseModel<object>();
 
+            string Token = _account.GetHeader(Request);
 
-            var data = from m in _context.DBMainMenu
-                       where !m.IsDisabled
-                       orderby m.Position
-                       select new
-                       {
-                           IdMain = m.Id_Main,
-                           Title = m.Title,
-                           Summary = m.Summary,
-                           Link = m.Link,
-                           Position = m.Position,
-                           Icon = m.Icon,
-                           GroupName = m.GroupName,
-                           Target = m.Target
-                       };
+            LoginData loginData = _account._GetInfoUser(Token);
+            var rules = _context.DBRules.Where(x => x.CodeGroup.Equals("0000")).Select(s => s.Code).Distinct().ToList();
+
+            if(loginData == null)
+            {
+                var data = _context.DBMainMenu.Where(x => !x.IsDisabled && rules.Contains(x.AllowCode)).Select(m => new
+                {
+                    IdMain = m.Id_Main,
+                    Title = m.Title,
+                    Summary = m.Summary,
+                    Link = m.Link,
+                    Position = m.Position,
+                    Icon = m.Icon,
+                    GroupName = m.GroupName,
+                    Target = m.Target
+                }).ToList().OrderBy(o => o.Position);
+                
+                _baseModel.status = 1;
+                _baseModel.data = data;
+                return _baseModel;
+            }
+            else
+            {
+                var dataAcc = _context.DBMainMenu.Where(x => !x.IsDisabled && rules.Contains(x.AllowCode)).Select(m => new {
+                                        IdMain = m.Id_Main,
+                                        Title = m.Title,
+                                        Summary = m.Summary,
+                                        Link = m.Link,
+                                        Position = m.Position,
+                                        Icon = m.Icon,
+                                        GroupName = m.GroupName,
+                                        Target = m.Target
+                                    }).Union(_context.DBMainMenu.Where(x => !x.IsDisabled && loginData.Rules.Contains(x.AllowCode)).Select(m => new
+                                            {
+                                                IdMain = m.Id_Main,
+                                                Title = m.Title,
+                                                Summary = m.Summary,
+                                                Link = m.Link,
+                                                Position = m.Position,
+                                                Icon = m.Icon,
+                                                GroupName = m.GroupName,
+                                                Target = m.Target
+                                            }).ToList()).Distinct().ToList().OrderBy(o => o.Position);
 
 
-            _baseModel.status = 1;
-            _baseModel.data = data;
-            return _baseModel;
+                _baseModel.status = 1;
+                _baseModel.data = dataAcc;
+                return _baseModel;
+            }
         }
 
         [HttpPost]
@@ -222,6 +253,7 @@ namespace API_Project.Controllers
             DBAccount item = new DBAccount();
             item.Username = data.username;
             item.Password = password_salt;
+            item.CodeGroup = "0000";
             item.Salt = salt;
             item.IdUser = user.IdUser;
 
@@ -235,7 +267,7 @@ namespace API_Project.Controllers
         }
 
         [HttpPost]
-        [Authorize()]
+        //[Authorize()]
         [Route("ResetSession")]
         public BaseModel<object> ResetSession()
         {
@@ -264,6 +296,57 @@ namespace API_Project.Controllers
             _baseModel.data = reset;
 
             return _baseModel;
+        }
+
+
+        [HttpGet]
+        [Authorize]
+        [Route("PermissionUrl")]
+        public BaseModel<object> PermissionUrl(string currentUrl)
+        {
+            BaseModel<object> _baseModel = new BaseModel<object>();
+            string Token = lc.GetHeader(Request);
+            var user = lc._GetInfoUser(Token);
+            var rules = lc._GetAllRuleUser(Token);
+
+            if (user == null)
+            {
+                _baseModel.status = 0;
+                _baseModel.data = false;
+                return _baseModel;
+            }
+
+            try
+            {
+                if (user.Rules.Contains("1001"))
+                {
+                    _baseModel.status = 1;
+                    _baseModel.data = true;
+                    return _baseModel;
+                }
+                List<DBMainMenuModel> _mainmenu = new List<DBMainMenuModel>();
+
+
+                _mainmenu = (from mn in _context.DBMainMenu
+                             where user.Rules.Contains(mn.AllowCode)
+                             select mn
+                            ).ToList();
+
+                bool isTrue  = _mainmenu.Where(x => currentUrl.ToString().ToLower().IndexOf(x.Link.ToString().ToLower()) == 0).Count() > 0;
+
+                _baseModel.status = isTrue ? 1 : 0;
+                _baseModel.data = isTrue;
+                return _baseModel;
+
+            }
+            catch (Exception ex)
+            {
+                _baseModel.status = 0;
+                _baseModel.data = false;
+                return _baseModel;
+            }
+
+
         }
     }
 

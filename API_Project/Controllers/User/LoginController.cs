@@ -54,6 +54,8 @@ namespace API_Project.Controllers
 
                 user = _context.DBUser.Where(x => (x.IdUser == account.IdUser && !x.IsDelete)).FirstOrDefault();
 
+                var rules = _context.DBRules.Where(x => x.CodeGroup.Equals(account.CodeGroup)).Select(s => s.Code).Distinct().ToList();
+
                 bool pwh = false;
 
 
@@ -66,6 +68,7 @@ namespace API_Project.Controllers
                     {
                         Id = user.IdUser.Value,
                         IdAccount = account.IdAccount.Value,
+                        Rules = rules,
                         UserName = account.Username,
                         Fullname = user.Fullname,
                         isEnableError = false,
@@ -128,7 +131,7 @@ namespace API_Project.Controllers
                 Id = userInfo.Id,
                 IdAccount = userInfo.IdAccount,
                 UserName = userInfo.UserName,
-                //Rules = userInfo.Rules,
+                Rules = userInfo.Rules,
                 Fullname = userInfo.Fullname,
             };
 
