@@ -1,0 +1,1 @@
+{"IdItem": "12/28/2020 4:09:26 PM","IdType": "","Money": "call.log","Sales": "log","RateAvg": "log","LinkImage": "2020-12-28T09:09:26.7588926Z"}

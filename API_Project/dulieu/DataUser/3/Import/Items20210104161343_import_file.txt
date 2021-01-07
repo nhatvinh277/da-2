@@ -1,0 +1,20 @@
+[
+  {
+    "IdItem": -1,
+    "Name": "Sản phẩm a",
+    "IdType": -1,
+    "Money": 20000000,
+    "Sales": 20,
+    "RateAvg": 0,
+    "LinkImage": "aaaaaaaaaaaaaaaaaaaaa"
+  },
+  {
+    "IdItem": -1,
+    "Name": "Sản phẩm B",
+    "IdType": -1,
+    "Money": 100000,
+    "Sales": 10,
+    "RateAvg": 0,
+    "LinkImage": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  }
+]

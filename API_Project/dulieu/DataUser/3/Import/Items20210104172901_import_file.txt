@@ -1,0 +1,20 @@
+[
+  {
+    "IdItem": -1,
+    "Name": "Điện Thoại Iphone11 - Hàng Chính Hãng",
+    "IdType": -1,
+    "Money": 80090000,
+    "Sales": 20,
+    "RateAvg": 0,
+    "LinkImage": "https://salt.tikicdn.com/cache/200x200/ts/product/ad/bc/1c/0dda08cc76cf2d246f666c94c7945706.jpg"
+  },
+  {
+    "IdItem": -1,
+    "Name": "Điện Thoại Iphone12 - Hàng Chính Hãng",
+    "IdType": -1,
+    "Money": 8190000,
+    "Sales": 10,
+    "RateAvg": 0,
+    "LinkImage": "https://salt.tikicdn.com/cache/200x200/ts/product/ad/bc/1c/0dda08cc76cf2d246f666c94c7945706.jpg"
+  }
+]

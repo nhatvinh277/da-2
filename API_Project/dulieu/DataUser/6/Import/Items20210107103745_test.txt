@@ -1,0 +1,16 @@
+[
+  {
+    "RateAvg": 6.5,
+    "Money": 0,
+    "Sales": 0,
+    "Name": "Điện thoại Vivo Y11 (3GB/32GB) - Hàng chính hãng",
+    "LinkImage": "https://salt.tikicdn.com/cache/w444/ts/product/3a/93/66/4db995b76bd427553677d0cd4766c3c4.jpg"
+  },
+  {
+    "RateAvg": 6.5,
+    "Money": 0,
+    "Sales": 0,
+    "Name": "Điện thoại Vsmart Star 4 (4GB/64GB) - Hàng Chính Hãng",
+    "LinkImage": "https://salt.tikicdn.com/cache/w444/ts/product/9e/90/ac/7daa29266a98ae64a149e93cfa7537d6.jpg"
+  }
+]
