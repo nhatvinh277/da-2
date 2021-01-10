@@ -14,5 +14,6 @@ namespace API_Project.Models
         public decimal Sales { get; set; }
         public decimal RateAvg { get; set; }
         public string LinkImage { get; set; }
+        public bool IsDel { get; set; }
     }
 }

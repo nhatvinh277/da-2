@@ -531,6 +531,7 @@ namespace API_Project.Controllers
                 List<ItemsModel> _data = (from item in _context.DBItems
                                           join type in _context.DBTypeItems on item.IdType equals type.IdType into t
                                           from type in t.DefaultIfEmpty()
+                                          where !item.IsDel
                                           select new ItemsModel
                                           {
                                               IdItem = item.IdItem.Value,
@@ -693,6 +694,20 @@ namespace API_Project.Controllers
 
                     list.ForEach(s => s.IdType = data.idLoai);
 
+                    if(list.Count() <= 0)
+                    {
+                        return _baseModel = new BaseModel<object>
+                        {
+                            data = null,
+                            status = 0,
+                            error = new ErrorModel
+                            {
+                                code = Constant.ERRORDATA,
+                                message = "File import không có dữ liệu!"
+                            }
+                        };
+                    }
+
                     _baseModel.status = 1;
                     _baseModel.data = list;
                     return _baseModel;
@@ -786,6 +801,7 @@ namespace API_Project.Controllers
                         element.Money = ele.Money;
                         element.Sales = ele.Sales;
                         element.RateAvg = 0;
+                        element.IsDel = false;
                         element.LinkImage = string.IsNullOrEmpty(ele.LinkImage) ? "" : ele.LinkImage.ToString().Trim();
 
                         _context.DBItems.Add(element);
@@ -856,6 +872,53 @@ namespace API_Project.Controllers
                     data = null,
                     page = null
                 };
+            }
+        }
+        #endregion
+
+        #region
+        [HttpPost]
+        [Authorize]
+        [Route("Delete")]
+        public BaseModel<object> Delete(decimal IdItem)
+        {
+            BaseModel<object> model = new BaseModel<object>();
+            ErrorModel _error = new ErrorModel();
+            string Token = _account.GetHeader(Request);
+            LoginData loginData = _account._GetInfoUser(Token);
+            if (loginData == null)
+            {
+                return model = new BaseModel<object>
+                {
+                    data = null,
+                    status = 0,
+                    error = new ErrorModel
+                    {
+                        code = Constant.ERRORDATA,
+                        message = "Phiên đăng nhập hết hạn hoặc bạn chưa truyền Token"
+                    }
+                };
+            }
+
+            try
+            {
+                var _item = _context.DBItems.Where(x => x.IdItem == IdItem && !x.IsDel).FirstOrDefault();
+
+                _item.IsDel = true;
+
+                _context.SaveChanges();
+
+                model.status = 1;
+                return model;
+            }
+            catch (Exception ex)
+            {
+                model.status = 0;
+                _error.message = "Xóa thất bại, vui lòng kiểm tra lại!";
+                _error.code = Constant.ERRORCODE;
+                model.error = _error;
+                model.data = null;
+                return model;
             }
         }
         #endregion

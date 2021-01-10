@@ -135,6 +135,7 @@ namespace API_Project.Models
                 entity.Property(e => e.Sales).HasColumnName("Sales");
                 entity.Property(e => e.RateAvg).HasColumnName("RateAvg");
                 entity.Property(e => e.LinkImage).HasColumnName("LinkImage");
+                entity.Property(e => e.IsDel).HasColumnName("IsDel");
             });
 
             modelBuilder.Entity<DBTypeItems>(entity =>
